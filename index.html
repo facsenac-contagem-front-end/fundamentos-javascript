@@ -1,0 +1,987 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>JavaScript: primeiros passos</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat:wght@400..700&family=JetBrains+Mono:wght@100..800&family=Lexend:wght@100..900&display=swap">
+<style>
+/* Layout: coluna única de leitura (até 70 caracteres), uma etapa visível por vez, faixa de progresso fixa no topo do conteúdo. */
+:root {
+  --fundo: #f3f5f7; --sup: #ffffff; --sup2: #e7ecf0; --linha: #cfd8df; --grade: #e1e7ec;
+  --texto: #0e1822; --suave: #4a5a68;
+  --ciano: #22d8f0; --ciano-texto: #0a6d85; --ciano-suave: #d4f5fa; --sobre-ciano: #04141c;
+  --anot: #a15c00; --ok: #0f7a4d; --ok-suave: #e3f4ec; --erro: #c02637; --erro-suave: #fbe7e9;
+  --foco: #0a6d85;
+  --sans: "Lexend", "Segoe UI", system-ui, sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, Consolas, monospace;
+  --mao: "Caveat", "Segoe Print", cursive;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --fundo: #0e1822; --sup: #16232f; --sup2: #1e2e3c; --linha: #2c3f50; --grade: #1a2835;
+    --texto: #e9eef2; --suave: #9aacbb;
+    --ciano-texto: #22d8f0; --ciano-suave: #10363f;
+    --anot: #ffcf5a; --ok: #4ade9a; --ok-suave: #153a2c; --erro: #ff7a7a; --erro-suave: #3a1f26;
+    --foco: #22d8f0;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --fundo: #0e1822; --sup: #16232f; --sup2: #1e2e3c; --linha: #2c3f50; --grade: #1a2835;
+  --texto: #e9eef2; --suave: #9aacbb;
+  --ciano-texto: #22d8f0; --ciano-suave: #10363f;
+  --anot: #ffcf5a; --ok: #4ade9a; --ok-suave: #153a2c; --erro: #ff7a7a; --erro-suave: #3a1f26;
+  --foco: #22d8f0;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+body { background: var(--fundo); color: var(--texto); font-family: var(--sans); font-size: 17px; line-height: 1.7; font-weight: 350; }
+h1, h2, h3, h4 { text-wrap: balance; margin: 0; }
+p { margin: 0; }
+code, kbd, .mono { font-family: var(--mono); }
+button, input, textarea { font: inherit; color: inherit; }
+button { cursor: pointer; }
+button:disabled { cursor: not-allowed; opacity: .5; }
+:focus-visible { outline: 3px solid var(--foco); outline-offset: 2px; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+.wrap { max-width: 1088px; margin-inline: auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.cursor { display: inline-block; width: .42em; height: .85em; margin-left: .18em; vertical-align: -.08em; background: var(--ciano); border-radius: 4px; }
+
+/* Topo */
+.topo { border-bottom: 1px solid var(--linha); }
+.topo .wrap { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; padding-block: 12px; }
+.marca { font-weight: 600; font-size: 17px; }
+.marca .cursor { width: 8px; height: 18px; margin-left: 6px; vertical-align: -3px; }
+.btn-tema { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 8px 16px; border: 1px solid var(--linha); border-radius: 999px; background: var(--sup); font-size: 15px; }
+
+/* Hero */
+.hero { border-bottom: 1px solid var(--linha); background-color: var(--fundo); background-image: linear-gradient(var(--grade) 1px, transparent 1px), linear-gradient(90deg, var(--grade) 1px, transparent 1px); background-size: 24px 24px; }
+.hero .wrap { padding-block: 56px 48px; display: flex; flex-direction: column; gap: 20px; }
+.pilula { align-self: flex-start; padding: 4px 14px; border: 1px solid var(--linha); border-radius: 999px; background: var(--sup); font-size: 14px; color: var(--suave); }
+.hero h1 { font-size: clamp(36px, 6vw, 60px); line-height: 1.08; font-weight: 600; letter-spacing: -.02em; }
+.hero .apoio { max-width: 60ch; font-size: 20px; line-height: 1.6; font-weight: 300; color: var(--suave); }
+.metas { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.meta { padding: 4px 12px; border-radius: 4px; background: var(--sup2); font-size: 15px; }
+.nota-mao { font-family: var(--mao); font-size: 28px; font-weight: 600; line-height: 1.2; color: var(--anot); transform: rotate(-2deg); margin-left: 8px; }
+
+/* Conteúdo */
+main.wrap { padding-block: 40px 64px; display: flex; flex-direction: column; gap: 32px; }
+.bloco-titulo { font-size: 22px; line-height: 1.3; font-weight: 500; }
+.grade-auto { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }
+.passo-uso { display: flex; gap: 14px; align-items: flex-start; padding: 16px 18px; background: var(--sup); border: 1px solid var(--linha); border-radius: 16px; font-size: 16px; line-height: 1.5; }
+.num { flex: 0 0 32px; height: 32px; border-radius: 8px; background: var(--sup2); font-weight: 600; display: flex; align-items: center; justify-content: center; font-size: 16px; }
+
+/* Progresso e etapas */
+.progresso { display: flex; flex-direction: column; gap: 14px; }
+.progresso-topo { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; font-size: 15px; }
+.barra { height: 8px; border-radius: 999px; background: var(--sup2); overflow: hidden; }
+.barra > div { height: 100%; width: 0; background: var(--ciano); border-radius: 999px; transition: width .3s ease; }
+.passos { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; }
+.passo { display: flex; flex-direction: column; align-items: flex-start; gap: 4px; min-height: 76px; padding: 12px 14px; text-align: left; background: var(--sup); border: 2px solid var(--linha); border-radius: 8px; }
+.passo .n { font-family: var(--mono); font-size: 14px; color: var(--suave); }
+.passo .t { font-size: 16px; font-weight: 500; line-height: 1.3; }
+.passo .e { font-size: 13px; color: var(--suave); }
+.passo.feita { border-color: var(--ok); }
+.passo.feita .e { color: var(--ok); }
+.passo[aria-current="step"] { background: var(--ciano-suave); border-color: var(--ciano); }
+.passo[aria-current="step"] .e { color: var(--ciano-texto); }
+
+.banner-ok { display: flex; gap: 16px; align-items: center; padding: 18px 22px; border: 2px solid var(--ok); border-radius: 16px; background: var(--sup); }
+.banner-ok strong { color: var(--ok); font-weight: 600; }
+
+.cab-etapa { display: flex; flex-direction: column; gap: 12px; padding: 24px; background: var(--sup); border: 1px solid var(--linha); border-radius: 16px; scroll-margin-top: 16px; }
+.cab-etapa .meta-etapa { font-size: 15px; color: var(--suave); }
+.cab-etapa h2 { font-size: clamp(26px, 4vw, 32px); line-height: 1.2; font-weight: 600; letter-spacing: -.01em; }
+.objetivo { display: flex; gap: 12px; align-items: flex-start; padding: 12px 16px; background: var(--ciano-suave); border-radius: 8px; line-height: 1.55; }
+.objetivo svg { flex: 0 0 22px; margin-top: 3px; }
+
+.etapa { display: flex; flex-direction: column; gap: 40px; }
+.bloco { display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+.bloco-cab { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.bloco-cab h3 { font-size: 24px; line-height: 1.3; font-weight: 500; }
+.etiqueta { padding: 2px 10px; border-radius: 999px; font-size: 13px; font-weight: 500; background: var(--sup2); }
+.etiqueta.ativa { background: var(--ciano-suave); color: var(--ciano-texto); }
+.texto { max-width: 66ch; }
+.discreto { font-size: 15px; color: var(--suave); }
+.cartao { padding: 18px 20px; background: var(--sup); border: 1px solid var(--linha); border-radius: 16px; }
+.cartao.destaque { background: var(--ciano-suave); border: 2px solid var(--ciano); }
+.cartao .tag { font-family: var(--mono); font-size: 15px; color: var(--suave); }
+.cartao.destaque .tag { color: var(--ciano-texto); }
+.cartao .nome { font-size: 19px; font-weight: 500; }
+.cartao .desc { font-size: 15px; color: var(--suave); line-height: 1.5; }
+.painel { padding: 20px 22px; background: var(--sup); border: 1px solid var(--linha); border-radius: 16px; display: flex; flex-direction: column; gap: 16px; min-width: 0; }
+.cod-bloco { padding: 12px 14px; background: var(--sup2); border-radius: 8px; font-family: var(--mono); font-size: 14px; line-height: 1.6; white-space: pre-wrap; overflow-x: auto; }
+.cod-inline { font-family: var(--mono); color: var(--ciano-texto); }
+
+.botoes { display: flex; gap: 8px; flex-wrap: wrap; }
+.btn { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 8px 16px; border: 1px solid var(--linha); border-radius: 8px; background: transparent; font-size: 15px; }
+.btn.cheio { background: var(--sup2); }
+.btn-primario { border: 0; background: var(--ciano); color: var(--sobre-ciano); font-weight: 600; font-size: 16px; padding: 10px 20px; }
+.chave { min-height: 44px; padding: 8px 14px; border: 2px solid var(--linha); border-radius: 8px; background: var(--sup); font-size: 15px; }
+.chave.mono { font-family: var(--mono); }
+.chave[aria-pressed="true"] { background: var(--ciano-suave); border-color: var(--ciano); }
+
+/* Características */
+.cars { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px; align-items: start; }
+.car { display: flex; flex-direction: column; gap: 8px; width: 100%; padding: 16px 18px; text-align: left; background: var(--sup); border: 1px solid var(--linha); border-radius: 16px; }
+.car[aria-expanded="true"] { background: var(--ciano-suave); border-color: var(--ciano); }
+.car .linha1 { display: flex; justify-content: space-between; align-items: center; gap: 12px; width: 100%; }
+.car strong { font-size: 18px; font-weight: 500; }
+.car .sinal { font-family: var(--mono); font-size: 18px; color: var(--ciano-texto); }
+.car .frase { font-size: 15px; line-height: 1.55; color: var(--suave); }
+.car .cod-bloco { width: 100%; }
+
+/* Classificação */
+.itens { display: flex; flex-direction: column; gap: 10px; }
+.item { display: flex; flex-direction: column; gap: 10px; padding: 14px 18px; background: var(--sup); border: 2px solid var(--linha); border-radius: 16px; }
+.item.certo { border-color: var(--ok); }
+.item.errado { border-color: var(--erro); }
+.item-linha { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.item code { font-size: 15px; overflow-wrap: anywhere; }
+.veredito { font-size: 15px; line-height: 1.5; }
+.veredito strong { font-weight: 600; }
+.certo .veredito strong { color: var(--ok); }
+.errado .veredito strong { color: var(--erro); }
+
+/* Checklist */
+.check { display: flex; gap: 14px; align-items: flex-start; padding: 14px 18px; background: var(--sup); border: 1px solid var(--linha); border-radius: 16px; cursor: pointer; }
+.check:has(input:checked) { background: var(--ciano-suave); border-color: var(--ciano); }
+.check input { flex: 0 0 22px; width: 22px; height: 22px; margin: 3px 0 0; accent-color: var(--ciano-texto); }
+.check .t { font-weight: 500; display: block; }
+.check .d { font-size: 15px; line-height: 1.55; color: var(--suave); display: block; }
+.ok-msg { font-weight: 500; color: var(--ok); }
+kbd { padding: 1px 6px; border: 1px solid var(--linha); border-radius: 4px; background: var(--sup2); font-size: .9em; }
+.mini { display: flex; gap: 12px; align-items: center; padding: 12px 16px; border: 1px solid var(--linha); border-radius: 8px; font-size: 16px; }
+
+/* Validador de nome */
+.campo { width: 100%; max-width: 480px; min-height: 48px; padding: 10px 14px; background: var(--sup2); border: 1px solid var(--linha); border-radius: 8px; font-family: var(--mono); font-size: 17px; }
+.resultado { display: flex; flex-direction: column; gap: 6px; padding: 14px 16px; border: 2px solid var(--linha); border-radius: 8px; }
+.resultado strong { font-weight: 600; }
+.resultado.ok { border-color: var(--ok); } .resultado.ok strong { color: var(--ok); }
+.resultado.erro { border-color: var(--erro); } .resultado.erro strong { color: var(--erro); }
+.resultado.aviso { border-color: var(--texto); }
+
+/* typeof */
+.tipo-res { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
+.tipo-grande { font-family: var(--mono); font-size: 28px; font-weight: 500; color: var(--ciano-texto); }
+.depois { align-self: flex-start; padding: 2px 10px; border: 1px dashed var(--linha); border-radius: 4px; font-size: 13px; color: var(--suave); }
+
+/* Array */
+.caixas { display: flex; gap: 10px; flex-wrap: wrap; min-height: 96px; align-items: flex-start; }
+.caixa { display: flex; flex-direction: column; align-items: center; gap: 6px; min-width: 110px; padding: 0; border: 0; background: transparent; }
+.caixa .v { width: 100%; padding: 16px 14px; background: var(--sup2); border: 2px solid var(--linha); border-radius: 8px; font-family: var(--mono); font-size: 17px; }
+.caixa .i { font-family: var(--mono); font-size: 15px; color: var(--suave); }
+.caixa[aria-pressed="true"] .v { background: var(--ciano-suave); border-color: var(--ciano); }
+.caixa[aria-pressed="true"] .i { color: var(--ciano-texto); }
+.leitura { padding: 14px 16px; background: var(--sup2); border-radius: 8px; font-family: var(--mono); font-size: 15px; line-height: 1.8; white-space: pre-wrap; overflow-x: auto; }
+.leitura .s { color: var(--suave); }
+
+/* Calculadora e laboratórios */
+.campos { display: flex; gap: 16px; flex-wrap: wrap; }
+.campos label { display: flex; flex-direction: column; gap: 6px; font-size: 15px; color: var(--suave); }
+.campos input { width: 140px; min-height: 48px; padding: 10px 14px; background: var(--sup2); border: 1px solid var(--linha); border-radius: 8px; font-family: var(--mono); font-size: 18px; color: var(--texto); }
+.calc { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; }
+.calc div { display: flex; flex-direction: column; gap: 2px; padding: 12px 16px; background: var(--sup2); border-radius: 8px; min-width: 0; }
+.calc span { font-size: 14px; color: var(--suave); }
+.calc code { font-size: 17px; overflow-wrap: anywhere; font-variant-numeric: tabular-nums; }
+.calc b { font-weight: 500; color: var(--ciano-texto); }
+.comps { display: flex; flex-direction: column; }
+.comp { display: flex; justify-content: space-between; gap: 16px; padding: 10px 12px; border-bottom: 1px solid var(--linha); font-family: var(--mono); font-size: 16px; }
+.comp.destaque { background: var(--ciano-suave); border-radius: 4px; }
+.comp .r { font-weight: 500; color: var(--suave); }
+.comp .r.v { color: var(--ciano-texto); }
+.toggle { display: flex; align-items: center; gap: 12px; min-height: 48px; padding: 8px 16px; border: 2px solid var(--linha); border-radius: 8px; background: transparent; font-size: 16px; }
+.toggle code { font-weight: 500; color: var(--suave); }
+.toggle[aria-pressed="true"] { background: var(--ciano-suave); border-color: var(--ciano); }
+.toggle[aria-pressed="true"] code { color: var(--ciano-texto); }
+.logica { display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; padding: 12px 16px; background: var(--sup2); border-radius: 8px; }
+.logica .p { font-weight: 500; display: block; }
+.logica code { font-size: 14px; color: var(--suave); }
+.logica .r { font-family: var(--mono); font-weight: 500; color: var(--suave); }
+.logica .r.v { color: var(--ciano-texto); }
+
+/* Simulador de código */
+.pg { background: var(--sup); border: 1px solid var(--linha); border-radius: 16px; overflow: hidden; min-width: 0; }
+.pg-topo { display: flex; align-items: center; gap: 12px; padding: 14px 20px; border-bottom: 1px solid var(--linha); flex-wrap: wrap; }
+.pg-topo h4 { flex: 1 1 200px; font-size: 18px; line-height: 1.3; font-weight: 500; }
+.pg-topo span { font-size: 14px; color: var(--suave); }
+.pg-corpo { padding: 16px 20px; display: flex; flex-direction: column; gap: 12px; }
+.dica { padding: 12px 16px; background: var(--ciano-suave); border-radius: 8px; font-size: 16px; line-height: 1.55; }
+.rotulo { font-size: 14px; color: var(--suave); }
+.editor { width: 100%; margin: 0; background: var(--sup2); border: 1px solid var(--linha); border-radius: 8px; padding: 14px 16px; font-family: var(--mono); font-size: 15px; line-height: 1.6; resize: vertical; tab-size: 2; white-space: pre; overflow-x: auto; }
+.console { background: var(--fundo); border-top: 1px solid var(--linha); padding: 14px 20px 18px; min-height: 72px; }
+.console-topo { display: flex; justify-content: space-between; gap: 12px; font-size: 14px; color: var(--suave); margin-bottom: 8px; }
+.console-vazio { font-size: 15px; color: var(--suave); }
+.linha-saida { display: flex; gap: 10px; padding: 2px 0; font-family: var(--mono); font-size: 15px; line-height: 1.6; white-space: pre-wrap; overflow-wrap: anywhere; }
+.linha-saida .m { flex: 0 0 auto; color: var(--ciano-texto); }
+.linha-saida.erro, .linha-saida.erro .m { color: var(--erro); }
+.linha-saida.suave { color: var(--suave); }
+
+/* Teste rápido */
+.quiz { padding: 22px 24px; background: var(--sup); border: 1px solid var(--linha); border-radius: 16px; display: flex; flex-direction: column; gap: 16px; }
+.quiz-topo { display: flex; align-items: center; gap: 10px; font-size: 14px; color: var(--suave); }
+.quiz h4 { font-size: 20px; line-height: 1.45; font-weight: 500; }
+.opcoes { display: flex; flex-direction: column; gap: 10px; }
+.opcao { display: flex; align-items: center; gap: 14px; width: 100%; min-height: 48px; padding: 10px 16px; text-align: left; background: transparent; border: 2px solid var(--linha); border-radius: 8px; font-size: 17px; line-height: 1.4; }
+.opcao .l { flex: 0 0 30px; height: 30px; border-radius: 4px; background: var(--sup2); display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 600; }
+.opcao .x { flex: 1; }
+.opcao .s { font-size: 14px; font-weight: 600; }
+.opcao.certa { background: var(--ok-suave); border-color: var(--ok); } .opcao.certa .s { color: var(--ok); }
+.opcao.errada { background: var(--erro-suave); border-color: var(--erro); } .opcao.errada .s { color: var(--erro); }
+.opcao.apagada { opacity: .6; }
+.opcao:disabled { cursor: default; }
+.quiz-retorno { display: flex; flex-direction: column; gap: 10px; padding: 14px 16px; border-radius: 8px; background: var(--sup2); }
+.quiz-retorno strong { font-weight: 600; }
+.quiz-retorno.acertou strong { color: var(--ok); }
+.quiz-retorno.errou strong { color: var(--erro); }
+.quiz-retorno .btn { align-self: flex-start; }
+
+/* Navegação inferior */
+.nav-etapa { display: flex; flex-direction: column; gap: 14px; padding-top: 20px; border-top: 1px solid var(--linha); }
+.nav-etapa .botoes { justify-content: space-between; }
+.nav-etapa .btn, .nav-etapa .btn-primario { min-height: 48px; font-size: 16px; padding: 10px 20px; }
+
+.rodape { border-top: 1px solid var(--linha); }
+.rodape .wrap { padding-block: 20px; font-size: 14px; color: var(--suave); }
+
+@media (prefers-reduced-motion: reduce) { .barra > div { transition: none; } }
+</style>
+
+<header class="topo">
+  <div class="wrap">
+    <span class="marca">Profa. Tamara Simões<span class="cursor" aria-hidden="true"></span></span>
+    <button type="button" class="btn-tema" id="btnTema">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"></path></svg>
+      <span id="rotuloTema">Modo escuro</span>
+    </button>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="wrap">
+    <span class="pilula">UC4 · Desenvolvimento Front-end · Faculdade Senac Contagem</span>
+    <h1>JavaScript: primeiros passos<span class="cursor" aria-hidden="true"></span></h1>
+    <p class="apoio">Leia em blocos curtos, rode os exemplos e teste o que aprendeu. Tudo funciona aqui mesmo, no navegador.</p>
+    <div class="metas">
+      <span class="meta">6 etapas</span>
+      <span class="meta">cerca de 90 minutos</span>
+      <span class="meta">nada para instalar agora</span>
+      <span class="nota-mao">edite, rode, erre, tente de novo</span>
+    </div>
+  </div>
+</section>
+
+<main class="wrap">
+
+  <section aria-labelledby="como-usar" class="bloco">
+    <h2 id="como-usar" class="bloco-titulo">Como usar este material</h2>
+    <div class="grade-auto">
+      <div class="passo-uso"><span class="num">1</span><span><strong>Uma etapa por vez.</strong> Só a etapa atual aparece na tela.</span></div>
+      <div class="passo-uso"><span class="num">2</span><span><strong>Leia, explore, rode, teste.</strong> As etiquetas mostram o que fazer em cada bloco.</span></div>
+      <div class="passo-uso"><span class="num">3</span><span><strong>Marque como concluída.</strong> Faça uma pausa curta antes da próxima.</span></div>
+    </div>
+  </section>
+
+  <nav aria-label="Etapas do material" class="progresso">
+    <div class="progresso-topo"><strong style="font-weight:500">Seu progresso</strong><span id="progTexto" class="discreto">0 de 6 etapas concluídas</span></div>
+    <div class="barra" role="progressbar" aria-label="Etapas concluídas" aria-valuemin="0" aria-valuemax="6" aria-valuenow="0" id="progBarra"><div></div></div>
+    <div class="passos" id="passos"></div>
+  </nav>
+
+  <div class="banner-ok" id="bannerOk" role="status" hidden>
+    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--ok)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M8.5 12.5l2.5 2.5 4.5-5"></path></svg>
+    <span><strong>Você concluiu as 6 etapas.</strong> Agora encare o desafio da aula no simulador da etapa 6.</span>
+  </div>
+
+  <div class="cab-etapa" id="cabEtapa" tabindex="-1">
+    <span class="meta-etapa" id="etapaMeta">Etapa 1 de 6 · 15 min</span>
+    <h2 id="etapaTitulo">Conhecendo o JavaScript</h2>
+    <div class="objetivo">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--ciano-texto)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><circle cx="12" cy="12" r="5"></circle><circle cx="12" cy="12" r="1"></circle></svg>
+      <span><strong style="font-weight:600">Objetivo:</strong> <span id="etapaObjetivo">entender o que é JavaScript, para que serve e onde ele roda.</span></span>
+    </div>
+  </div>
+
+  <!-- Etapa 1 -->
+  <section class="etapa" id="etapa1" aria-labelledby="etapaTitulo">
+    <div class="bloco">
+      <div class="bloco-cab"><span class="etiqueta">Leia</span><h3>O que é JavaScript</h3></div>
+      <p class="texto">JavaScript é a linguagem de programação da web. Se o HTML é o esqueleto da página e o CSS é a roupa, o JavaScript é o movimento: ele faz a página reagir ao que a pessoa faz.</p>
+      <div class="grade-auto">
+        <div class="cartao"><code class="tag">HTML</code><div class="nome">Estrutura</div><div class="desc">títulos, textos, botões</div></div>
+        <div class="cartao"><code class="tag">CSS</code><div class="nome">Estilo</div><div class="desc">cores, fontes, layout</div></div>
+        <div class="cartao destaque"><code class="tag">JS</code><div class="nome">Comportamento</div><div class="desc">cliques, validações, dados</div></div>
+      </div>
+      <p class="texto discreto">Criada em 1995 por Brendan Eich, na Netscape. O padrão oficial se chama ECMAScript. E JavaScript não tem nada a ver com Java.</p>
+    </div>
+
+    <div class="bloco">
+      <div class="bloco-cab"><span class="etiqueta ativa">Explore</span><h3>Características</h3></div>
+      <p class="texto">Clique em cada cartão para ver um exemplo.</p>
+      <div class="cars" id="cars"></div>
+    </div>
+
+    <div class="bloco">
+      <div class="bloco-cab"><span class="etiqueta ativa">Explore</span><h3>Cliente ou servidor?</h3></div>
+      <p class="texto">O mesmo JavaScript roda em dois lugares. Escolha um para ver o que ele consegue fazer.</p>
+      <div class="botoes" role="group" aria-label="Escolha o ambiente">
+        <button type="button" class="chave" data-amb="cliente" aria-pressed="true">Navegador (cliente)</button>
+        <button type="button" class="chave" data-amb="servidor" aria-pressed="false">Node.js (servidor)</button>
+      </div>
+      <div class="painel" id="ambPainel" aria-live="polite"></div>
+    </div>
+
+    <div class="bloco">
+      <div class="bloco-cab"><span class="etiqueta ativa">Explore</span><h3>Onde esse código roda?</h3></div>
+      <p class="texto">Classifique cada linha. <span class="discreto" id="placar"></span></p>
+      <div class="itens" id="classif"></div>
+    </div>
+
+    <div data-quiz="q1"></div>
+  </section>
+
+  <!-- Etapa 2 -->
+  <section class="etapa" id="etapa2" aria-labelledby="etapaTitulo" hidden>
+    <div class="bloco">
+      <div class="bloco-cab"><span class="etiqueta ativa">Explore</span><h3>Checklist da instalação</h3></div>
+      <p class="texto">Faça no seu computador e marque cada passo. <span class="discreto" id="checkTexto"></span></p>
+      <div class="itens" id="checklist"></div>
+      <p class="ok-msg" id="checkOk" role="status" hidden>Ambiente pronto! Você já pode rodar JavaScript no VS Code.</p>
+    </div>
+
+    <div class="bloco">
+      <div class="bloco-cab"><span class="etiqueta">Leia</span><h3>Console do navegador</h3></div>
+      <p class="texto">Todo navegador tem um console escondido. Ele roda JavaScript na hora e mostra as mensagens de erro da página.</p>
+      <div class="grade-auto">
+        <div class="mini"><span class="num">1</span>Abra qualquer página</div>
+        <div class="mini"><span class="num">2</span><span>Aperte <kbd>F12</kbd></span></div>
+        <div class="mini"><span class="num">3</span>Abra a aba Console</div>
+        <div class="mini"><span class="num">4</span>Digite e aperte Enter</div>
+      </div>
+      <p class="discreto">Atalho direto no Chrome: <span class="mono">Ctrl + Shift + J</span> no Windows ou <span class="mono">Cmd + Option + J</span> no Mac.</p>
+    </div>
+
+    <div class="bloco">
+      <div class="bloco-cab"><span class="etiqueta ativa">Rode</span><h3>Seu primeiro console.log</h3></div>
+      <div data-pg="m2"></div>
+    </div>
+
+    <div data-quiz="q2"></div>
+  </section>
+
+  <!-- Etapa 3 -->
+  <section class="etapa" id="etapa3" aria-labelledby="etapaTitulo" hidden>
+    <div class="bloco">
+      <div class="bloco-cab"><span class="etiqueta">Leia</span><h3>Caixas com etiqueta</h3></div>
+      <p class="texto">Uma variável guarda um valor para usar depois. O nome é a etiqueta; o valor é o que está dentro da caixa.</p>
+      <div class="grade-auto">
+        <div class="cartao destaque"><code class="tag" style="font-size:20px;font-weight:500">const</code><div class="nome">Valor fixo</div><div class="desc">Não pode receber outro valor. Use por padrão.</div></div>
+        <div class="cartao"><code class="tag" style="font-size:20px;font-weight:500;color:var(--texto)">let</code><div class="nome">Valor que muda</div><div class="desc">Contadores, totais, respostas do usuário.</div></div>
+        <div class="cartao"><code class="tag" style="font-size:20px;font-weight:500">var</code><div class="nome" style="color:var(--suave)">Forma antiga</div><div class="desc">Aparece em código velho. Evite em código novo.</div></div>
+      </div>
+    </div>
+
+    <div class="bloco">
+      <div class="bloco-cab"><span class="etiqueta ativa">Rode</span><h3>let e const na prática</h3></div>
+      <div data-pg="m3"></div>
+    </div>
+
+    <div class="bloco">
+      <div class="bloco-cab"><span class="etiqueta ativa">Explore</span><h3>Esse nome é válido?</h3></div>
+      <p class="texto">Digite um nome de variável e veja na hora se o JavaScript aceita.</p>
+      <div class="painel">
+        <label for="nomeVar" class="rotulo">Nome da variável</label>
+        <input id="nomeVar" class="campo" type="text" value="nome do aluno" autocomplete="off" spellcheck="false">
+        <div class="resultado" id="nomeRes" role="status" aria-live="polite"></div>
+        <span class="discreto" style="font-size:14px">Regras: começa com letra, _ ou $ · sem espaço nem hífen · maiúscula e minúscula são diferentes · prefira camelCase.</span>
+      </div>
+    </div>
+
+    <div data-quiz="q3"></div>
+  </section>
+
+  <!-- Etapa 4 -->
+  <section class="etapa" id="etapa4" aria-labelledby="etapaTitulo" hidden>
+    <div class="bloco">
+      <div class="bloco-cab"><span class="etiqueta ativa">Explore</span><h3>Explorador de typeof</h3></div>
+      <p class="texto">O operador <code class="cod-inline">typeof</code> responde o tipo de um valor. Escolha um valor:</p>
+      <div class="botoes" role="group" aria-label="Valores para testar" id="tipos"></div>
+      <div class="painel tipo-res" id="tipoRes" role="status" aria-live="polite"></div>
+    </div>
+
+    <div class="bloco">
+      <div class="bloco-cab"><span class="etiqueta ativa">Rode</span><h3>Tipos no código</h3></div>
+      <div data-pg="m4"></div>
+    </div>
+
+    <div data-quiz="q4"></div>
+  </section>
+
+  <!-- Etapa 5 -->
+  <section class="etapa" id="etapa5" aria-labelledby="etapaTitulo" hidden>
+    <div class="bloco">
+      <div class="bloco-cab"><span class="etiqueta ativa">Explore</span><h3>Arrays: listas em ordem</h3></div>
+      <p class="texto">Um array guarda vários valores em ordem. Cada posição tem um número, o índice, que começa em 0. Clique numa caixa para ler o valor.</p>
+      <div class="painel">
+        <div class="caixas" id="caixas"></div>
+        <div class="botoes">
+          <button type="button" class="btn cheio" id="arrPush">Adicionar no fim: push()</button>
+          <button type="button" class="btn cheio" id="arrPop">Remover o último: pop()</button>
+          <button type="button" class="btn" id="arrReset">Recomeçar</button>
+        </div>
+        <div class="leitura" id="arrLeitura" role="status" aria-live="polite"></div>
+      </div>
+    </div>
+
+    <div class="bloco">
+      <div class="bloco-cab"><span class="etiqueta">Leia</span><h3>Objetos: fichas com nome e valor</h3></div>
+      <p class="texto">Um objeto agrupa informações sobre a mesma coisa. Cada informação tem uma chave (o nome) e um valor. Use array quando a ordem importa; use objeto quando cada valor tem um nome.</p>
+    </div>
+
+    <div class="bloco">
+      <div class="bloco-cab"><span class="etiqueta ativa">Rode</span><h3>Monte a ficha de um aluno</h3></div>
+      <div data-pg="m5"></div>
+    </div>
+
+    <div data-quiz="q5"></div>
+  </section>
+
+  <!-- Etapa 6 -->
+  <section class="etapa" id="etapa6" aria-labelledby="etapaTitulo" hidden>
+    <div class="bloco">
+      <div class="bloco-cab"><span class="etiqueta ativa">Explore</span><h3>Calculadora de operadores</h3></div>
+      <p class="texto">Mude os números e veja todos os operadores matemáticos de uma vez.</p>
+      <div class="painel">
+        <div class="campos">
+          <label for="calcA">Valor de a<input id="calcA" type="text" inputmode="decimal" value="7" autocomplete="off"></label>
+          <label for="calcB">Valor de b<input id="calcB" type="text" inputmode="decimal" value="2" autocomplete="off"></label>
+        </div>
+        <div class="calc" id="calc"></div>
+        <p class="discreto" id="calcNota" role="status" aria-live="polite"></p>
+      </div>
+    </div>
+
+    <div class="bloco">
+      <div class="bloco-cab"><span class="etiqueta ativa">Explore</span><h3>Laboratório de comparação</h3></div>
+      <p class="texto">Escolha uma dupla de valores e compare com cada operador. Repare quando == e === discordam.</p>
+      <div class="botoes" role="group" aria-label="Duplas para comparar" id="pares"></div>
+      <div class="painel" role="status" aria-live="polite">
+        <div class="comps" id="comps"></div>
+        <p class="discreto" id="parNota"></p>
+      </div>
+    </div>
+
+    <div class="bloco">
+      <div class="bloco-cab"><span class="etiqueta ativa">Explore</span><h3>Interruptores lógicos</h3></div>
+      <p class="texto">Regras de entrada de um evento. Ligue e desligue as condições e veja o resultado de &amp;&amp;, || e !.</p>
+      <div class="painel">
+        <div class="botoes">
+          <button type="button" class="toggle" id="togA" aria-pressed="true"><span>Tem ingresso</span><code>true</code></button>
+          <button type="button" class="toggle" id="togB" aria-pressed="false"><span>Está na lista de convidados</span><code>false</code></button>
+        </div>
+        <div class="itens" id="logicas" role="status" aria-live="polite"></div>
+      </div>
+    </div>
+
+    <div class="bloco">
+      <div class="bloco-cab"><span class="etiqueta ativa">Rode</span><h3>Desafio da aula</h3></div>
+      <p class="texto">O código já calcula a média. Troque as notas e a frequência e veja quando o aluno é aprovado. Depois, transforme tudo em um objeto <code class="cod-inline">aluno</code>.</p>
+      <div data-pg="m6"></div>
+    </div>
+
+    <div data-quiz="q6"></div>
+  </section>
+
+  <div class="nav-etapa">
+    <p class="discreto">Terminou esta etapa? Marque como concluída. Uma pausa de 2 minutos ajuda o cérebro a guardar o que viu.</p>
+    <div class="botoes">
+      <button type="button" class="btn" id="btnVoltar">Etapa anterior</button>
+      <button type="button" class="btn btn-primario" id="btnConcluir"><span id="rotuloConcluir">Concluir e ir para a próxima</span><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></button>
+    </div>
+  </div>
+</main>
+
+<footer class="rodape"><div class="wrap">Material de apoio da UC4 · Faculdade Senac Contagem · Profa. Ma. Tamara Simões</div></footer>
+
+<script>
+(function () {
+  'use strict';
+  var CHAVE = 'uc4-js-primeiros-passos';
+  var $ = function (s, r) { return (r || document).querySelector(s); };
+  var esc = function (s) { return String(s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); };
+
+  /* ---------- Estado salvo neste navegador ---------- */
+  var estado = { etapa: 0, feitas: [false, false, false, false, false, false], checklist: [false, false, false, false, false], tema: null };
+  try {
+    var salvo = JSON.parse(localStorage.getItem(CHAVE) || 'null');
+    if (salvo) {
+      if (typeof salvo.etapa === 'number' && salvo.etapa >= 0 && salvo.etapa < 6) estado.etapa = salvo.etapa;
+      if (Array.isArray(salvo.feitas) && salvo.feitas.length === 6) estado.feitas = salvo.feitas.map(Boolean);
+      if (Array.isArray(salvo.checklist) && salvo.checklist.length === 5) estado.checklist = salvo.checklist.map(Boolean);
+      if (salvo.tema === 'light' || salvo.tema === 'dark') estado.tema = salvo.tema;
+    }
+  } catch (e) {}
+  function salvar() { try { localStorage.setItem(CHAVE, JSON.stringify(estado)); } catch (e) {} }
+
+  /* ---------- Tema ---------- */
+  function temaEfetivo() {
+    var a = document.documentElement.getAttribute('data-theme');
+    if (a === 'dark' || a === 'light') return a;
+    try { return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'; } catch (e) { return 'light'; }
+  }
+  function atualizarRotuloTema() { $('#rotuloTema').textContent = temaEfetivo() === 'dark' ? 'Modo claro' : 'Modo escuro'; }
+  if (estado.tema) document.documentElement.setAttribute('data-theme', estado.tema);
+  atualizarRotuloTema();
+  $('#btnTema').addEventListener('click', function () {
+    var novo = temaEfetivo() === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', novo);
+    estado.tema = novo; salvar(); atualizarRotuloTema();
+  });
+  try { window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', atualizarRotuloTema); } catch (e) {}
+
+  /* ---------- Etapas ---------- */
+  var ETAPAS = [
+    { titulo: 'Conhecendo o JavaScript', curto: 'Sobre JS', tempo: '15 min', objetivo: 'entender o que é JavaScript, para que serve e onde ele roda.' },
+    { titulo: 'Ambiente e console', curto: 'Ambiente', tempo: '15 min', objetivo: 'deixar o computador pronto para rodar JavaScript e usar o console.' },
+    { titulo: 'Variáveis', curto: 'Variáveis', tempo: '15 min', objetivo: 'guardar valores com let e const e escolher bons nomes.' },
+    { titulo: 'Tipos primitivos', curto: 'Tipos', tempo: '15 min', objetivo: 'reconhecer os tipos de dados e conferir cada um com typeof.' },
+    { titulo: 'Arrays e objetos', curto: 'Estruturas', tempo: '15 min', objetivo: 'agrupar valores em listas (arrays) e fichas (objetos).' },
+    { titulo: 'Operadores', curto: 'Operadores', tempo: '20 min', objetivo: 'fazer contas, comparar valores e combinar condições.' }
+  ];
+  var passosEl = $('#passos');
+  passosEl.innerHTML = ETAPAS.map(function (e, i) {
+    return '<button type="button" class="passo" data-ir="' + i + '"><span class="n">' + String(i + 1).padStart(2, '0') + '</span><span class="t">' + esc(e.curto) + '</span><span class="e"></span></button>';
+  }).join('');
+  passosEl.addEventListener('click', function (ev) {
+    var b = ev.target.closest('[data-ir]');
+    if (b) irPara(Number(b.getAttribute('data-ir')), false);
+  });
+
+  function renderEtapas() {
+    var n = estado.feitas.filter(Boolean).length;
+    $('#progTexto').textContent = n + ' de 6 etapas concluídas';
+    $('#progBarra').setAttribute('aria-valuenow', String(n));
+    $('#progBarra > div').style.width = Math.round(n / 6 * 100) + '%';
+    $('#bannerOk').hidden = n !== 6;
+    Array.prototype.forEach.call(passosEl.children, function (b, i) {
+      var atual = i === estado.etapa, feita = estado.feitas[i];
+      if (atual) b.setAttribute('aria-current', 'step'); else b.removeAttribute('aria-current');
+      b.classList.toggle('feita', feita);
+      b.querySelector('.e').textContent = feita ? (atual ? 'Concluída · aqui' : 'Concluída') : (atual ? 'Você está aqui' : 'A fazer');
+    });
+    var e = ETAPAS[estado.etapa];
+    $('#etapaMeta').textContent = 'Etapa ' + (estado.etapa + 1) + ' de 6 · ' + e.tempo;
+    $('#etapaTitulo').textContent = e.titulo;
+    $('#etapaObjetivo').textContent = e.objetivo;
+    for (var i = 0; i < 6; i++) $('#etapa' + (i + 1)).hidden = i !== estado.etapa;
+    $('#btnVoltar').disabled = estado.etapa === 0;
+    $('#rotuloConcluir').textContent = estado.etapa === 5 ? 'Concluir o material' : 'Concluir e ir para a próxima';
+  }
+  function irPara(i, focar) {
+    estado.etapa = i; salvar(); renderEtapas();
+    var cab = $('#cabEtapa');
+    try { cab.scrollIntoView({ block: 'start', behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' }); } catch (e) { cab.scrollIntoView(); }
+    if (focar) cab.focus({ preventScroll: true });
+  }
+  $('#btnVoltar').addEventListener('click', function () { if (estado.etapa > 0) irPara(estado.etapa - 1, true); });
+  $('#btnConcluir').addEventListener('click', function () {
+    estado.feitas[estado.etapa] = true;
+    if (estado.etapa < 5) irPara(estado.etapa + 1, true);
+    else { salvar(); renderEtapas(); $('#bannerOk').scrollIntoView({ block: 'center' }); }
+  });
+  var hash = /^#etapa([1-6])$/.exec(location.hash || '');
+  if (hash) estado.etapa = Number(hash[1]) - 1;
+  renderEtapas();
+
+  /* ---------- Simulador de código ---------- */
+  var FMT_SRC = "function __fmt(v,t,p){if(typeof v==='string')return t?v:\"'\"+v+\"'\";if(v===null)return 'null';if(v===undefined)return 'undefined';if(typeof v==='bigint')return String(v)+'n';if(typeof v==='symbol')return v.toString();if(typeof v==='function')return '\\u0192 '+(v.name||'anônima')+'()';if(Array.isArray(v)){if(p>2)return '[...]';return '['+v.map(function(x){return __fmt(x,false,p+1)}).join(', ')+']';}if(v instanceof Error)return v.name+': '+v.message;if(typeof v==='object'){if(p>2)return '{...}';var k=Object.keys(v);if(!k.length)return '{}';return '{ '+k.map(function(c){return c+': '+__fmt(v[c],false,p+1)}).join(', ')+' }';}return String(v);}";
+  var CONSOLE_SRC = "var __saida=[];function __add(t,a){__saida.push([t,Array.prototype.map.call(a,function(x){return __fmt(x,true,0)}).join(' ')]);}var console={log:function(){__add('log',arguments)},info:function(){__add('log',arguments)},table:function(){__add('log',arguments)},warn:function(){__add('aviso',arguments)},error:function(){__add('erro',arguments)},clear:function(){__saida.length=0}};";
+
+  function traduzir(nome, msg) {
+    msg = msg || '';
+    var m;
+    if (/constant variable/i.test(msg)) return 'Você tentou mudar o valor de uma const. Use let se o valor precisar mudar.';
+    if ((m = msg.match(/([A-Za-z_$\u00C0-\u024F][\w$\u00C0-\u024F]*) is not defined/))) return 'A variável ' + m[1] + ' não foi declarada. Confira se o nome está escrito igual (maiúsculas contam).';
+    if (/before initialization/.test(msg)) return 'Você usou uma variável antes da linha que cria ela.';
+    if ((m = msg.match(/Identifier '(.+?)' has already been declared/))) return 'A variável ' + m[1] + ' foi criada duas vezes. Use outro nome ou tire o let/const da segunda vez.';
+    if (/is not a function/.test(msg)) return 'Você usou () em algo que não é uma função. Confira o nome.';
+    if (/Cannot read propert/.test(msg)) return 'Você tentou ler uma propriedade de algo vazio (undefined ou null).';
+    if (nome === 'SyntaxError' || /SyntaxError/.test(msg)) return 'Erro de escrita no código. Confira parênteses, aspas, vírgulas e chaves.';
+    return 'Algo deu errado ao rodar o código.';
+  }
+
+  function executar(codigo, fim) {
+    var corpo = FMT_SRC + CONSOLE_SRC + 'try{\n' + codigo + '\n;postMessage({ok:true,saida:__saida});}catch(e){postMessage({ok:false,saida:__saida,nome:e&&e.name,msg:e&&e.message});}';
+    var worker, url, timer, terminou = false;
+    function acabar(r) {
+      if (terminou) return; terminou = true;
+      clearTimeout(timer);
+      try { worker.terminate(); } catch (e) {}
+      try { URL.revokeObjectURL(url); } catch (e) {}
+      fim(r);
+    }
+    try {
+      url = URL.createObjectURL(new Blob([corpo], { type: 'text/javascript' }));
+      worker = new Worker(url);
+    } catch (e) {
+      try {
+        (new Function('__s', FMT_SRC + CONSOLE_SRC + 'try{\n' + codigo + '\n;__s({ok:true,saida:__saida});}catch(e){__s({ok:false,saida:__saida,nome:e&&e.name,msg:e&&e.message});}'))(function (r) { fim(r); });
+      } catch (e2) { fim({ ok: false, saida: [], nome: e2 && e2.name, msg: e2 && e2.message }); }
+      return;
+    }
+    worker.onmessage = function (ev) { acabar(ev.data); };
+    worker.onerror = function (ev) {
+      ev.preventDefault && ev.preventDefault();
+      var msg = (ev && ev.message) || '';
+      var nome = (msg.match(/(SyntaxError|ReferenceError|TypeError|RangeError)/) || [])[1] || 'Erro';
+      acabar({ ok: false, saida: [], nome: nome, msg: msg.replace(/^Uncaught\s+/, '') });
+    };
+    timer = setTimeout(function () { acabar({ ok: false, saida: [], tempo: true }); }, 3000);
+  }
+
+  var PGS = {
+    m2: { titulo: 'console.log mostra valores', dica: 'Troque Tamara pelo seu nome e clique em Rodar código.', codigo: 'console.log("Olá, turma!");\nconsole.log(2 + 3);\nconsole.log("Meu nome é", "Tamara");' },
+    m3: { titulo: 'Mudando valores', dica: 'Rode uma vez. Depois apague as // da última linha e rode de novo. Leia o erro com calma: ele está te ensinando.', codigo: 'const escola = "Senac";\nlet turma = 1;\n\nturma = turma + 1;\nconsole.log(escola, turma);\n\n// Apague as duas barras da linha abaixo e rode de novo:\n// escola = "Outra escola";' },
+    m4: { titulo: 'Conferindo tipos', dica: 'Repare nas duas últimas linhas: com texto, o + junta; o - tenta converter para número.', codigo: 'let nome = "Ana";\nlet idade = 19;\nlet matriculada = true;\nlet apelido;\n\nconsole.log(typeof nome);\nconsole.log(typeof idade);\nconsole.log(typeof matriculada);\nconsole.log(typeof apelido);\n\nconsole.log("5" + 1);\nconsole.log("5" - 1);' },
+    m5: { titulo: 'Objeto aluno', dica: 'Adicione a chave cidade com o nome da sua cidade e mostre com console.log(aluno.cidade).', codigo: 'const aluno = {\n  nome: "Ana",\n  idade: 19,\n  materias: ["HTML", "CSS", "JS"]\n};\n\nconsole.log(aluno.nome);\nconsole.log(aluno.materias[2]);\n\naluno.idade = 20;\nconsole.log(aluno);' },
+    m6: { titulo: 'Aprovado ou não?', dica: 'Teste: o que acontece com frequência 70? E com notas 5, 6 e 7?', codigo: 'const notas = [7, 8.5, 6];\nconst frequencia = 80;\n\nconst soma = notas[0] + notas[1] + notas[2];\nconst media = soma / notas.length;\nconst aprovado = media >= 7 && frequencia >= 75;\n\nconsole.log("Média:", media.toFixed(1));\nconsole.log("Aprovado?", aprovado);' }
+  };
+
+  Array.prototype.forEach.call(document.querySelectorAll('[data-pg]'), function (el) {
+    var id = el.getAttribute('data-pg'), cfg = PGS[id], idEd = 'editor-' + id;
+    var linhas = Math.min(18, Math.max(4, cfg.codigo.split('\n').length + 1));
+    el.className = 'pg';
+    el.innerHTML =
+      '<div class="pg-topo"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--ciano-texto)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 7l-5 5 5 5M16 7l5 5-5 5"></path></svg><h4>' + esc(cfg.titulo) + '</h4><span>Ctrl + Enter também roda</span></div>' +
+      '<div class="pg-corpo"><p class="dica">' + esc(cfg.dica) + '</p>' +
+      '<label class="rotulo" for="' + idEd + '">Seu código (pode editar à vontade)</label>' +
+      '<textarea class="editor" id="' + idEd + '" rows="' + linhas + '" spellcheck="false" autocapitalize="off" autocomplete="off"></textarea>' +
+      '<div class="botoes"><button type="button" class="btn btn-primario" data-acao="rodar"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4.5v15l13-7.5z"></path></svg>Rodar código</button><button type="button" class="btn" data-acao="restaurar">Restaurar exemplo</button></div></div>' +
+      '<div class="console" role="log" aria-live="polite" aria-label="Saída do console"><div class="console-topo"><span>Console</span><span data-exec></span></div><div data-saida><p class="console-vazio">Clique em Rodar código para ver o resultado aqui.</p></div></div>';
+    var ta = el.querySelector('textarea'), saidaEl = el.querySelector('[data-saida]'), execEl = el.querySelector('[data-exec]'), n = 0;
+    ta.value = cfg.codigo;
+    function linha(classe, marca, texto) {
+      var d = document.createElement('div');
+      d.className = 'linha-saida' + (classe ? ' ' + classe : '');
+      var m = document.createElement('span'); m.className = 'm'; m.textContent = marca;
+      var t = document.createElement('span'); t.textContent = texto;
+      d.appendChild(m); d.appendChild(t);
+      return d;
+    }
+    function rodar() {
+      execEl.textContent = 'Rodando...';
+      executar(ta.value, function (r) {
+        n++;
+        execEl.textContent = 'Execução ' + n;
+        saidaEl.innerHTML = '';
+        (r.saida || []).forEach(function (s) {
+          if (s[0] === 'erro') saidaEl.appendChild(linha('erro', 'Erro:', s[1]));
+          else if (s[0] === 'aviso') saidaEl.appendChild(linha('', 'Aviso:', s[1]));
+          else saidaEl.appendChild(linha('', '›', s[1]));
+        });
+        if (r.tempo) {
+          saidaEl.appendChild(linha('erro', 'Erro:', 'O código demorou demais e foi parado. Será que tem um laço que nunca termina?'));
+        } else if (!r.ok) {
+          saidaEl.appendChild(linha('erro', 'Erro:', traduzir(r.nome, r.msg)));
+          saidaEl.appendChild(linha('suave', '', (r.nome && r.msg && r.msg.indexOf(r.nome) !== 0 ? r.nome + ': ' : '') + (r.msg || '')));
+        } else if (!(r.saida || []).length) {
+          saidaEl.appendChild(linha('suave', '', 'O código rodou, mas não mostrou nada. Use console.log() para ver um valor.'));
+        }
+      });
+    }
+    el.addEventListener('click', function (ev) {
+      var b = ev.target.closest('[data-acao]');
+      if (!b) return;
+      if (b.getAttribute('data-acao') === 'rodar') rodar();
+      else { ta.value = cfg.codigo; execEl.textContent = ''; saidaEl.innerHTML = '<p class="console-vazio">Clique em Rodar código para ver o resultado aqui.</p>'; ta.focus(); }
+    });
+    ta.addEventListener('keydown', function (ev) {
+      if ((ev.ctrlKey || ev.metaKey) && ev.key === 'Enter') { ev.preventDefault(); rodar(); }
+    });
+  });
+
+  /* ---------- Teste rápido ---------- */
+  var QUIZ = {
+    q1: { pergunta: 'Qual é o papel do JavaScript em uma página web?', opcoes: ['Definir a estrutura', 'Definir o estilo visual', 'Dar comportamento e interação', 'Guardar o banco de dados'], correta: 2, explicacao: 'HTML cuida da estrutura, CSS do estilo e JavaScript do comportamento: o que acontece quando a pessoa interage.' },
+    q2: { pergunta: 'Qual tecla abre as ferramentas do desenvolvedor na maioria dos navegadores?', opcoes: ['F5', 'F12', 'Ctrl + S', 'Alt + F4'], correta: 1, explicacao: 'F12 abre as ferramentas do desenvolvedor. Lá está a aba Console. F5 só recarrega a página.' },
+    q3: { pergunta: 'O nome da escola não vai mudar durante o programa. Como declarar essa variável?', opcoes: ['let escola = "Senac";', 'const escola = "Senac";', 'var escola = "Senac";', 'escola = "Senac";'], correta: 1, explicacao: 'const é para valores que não mudam. Se alguém tentar trocar, o JavaScript avisa com um erro, o que evita bugs.' },
+    q4: { pergunta: 'Qual é o resultado de typeof 42?', opcoes: ['"integer"', '"string"', '"number"', '"numeric"'], correta: 2, explicacao: 'Em JavaScript, inteiros e decimais são do mesmo tipo: number. Não existe tipo integer.' },
+    q5: { pergunta: 'No array ["HTML", "CSS", "JS"], qual índice guarda "JS"?', opcoes: ['0', '1', '2', '3'], correta: 2, explicacao: 'O índice começa em 0: "HTML" é 0, "CSS" é 1 e "JS" é 2.' },
+    q6: { pergunta: 'Qual é o resultado de 5 === "5"?', opcoes: ['true', 'false', '"5"', 'Dá erro'], correta: 1, explicacao: 'O === compara valor e tipo. 5 é number e "5" é string, então o resultado é false.' }
+  };
+  Array.prototype.forEach.call(document.querySelectorAll('[data-quiz]'), function (el) {
+    var q = QUIZ[el.getAttribute('data-quiz')];
+    el.className = 'quiz';
+    el.setAttribute('role', 'region');
+    el.setAttribute('aria-label', 'Teste rápido');
+    function desenhar(escolha) {
+      var respondeu = escolha >= 0, acertou = escolha === q.correta;
+      var html = '<div class="quiz-topo"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--ciano-texto)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .9-1 1.6v.6M12 17h.01"></path></svg><span>Teste rápido · uma pergunta</span></div>' +
+        '<h4>' + esc(q.pergunta) + '</h4><div class="opcoes" role="group" aria-label="Opções de resposta">';
+      q.opcoes.forEach(function (o, i) {
+        var cls = '', selo = '';
+        if (respondeu) {
+          if (i === q.correta) { cls = ' certa'; selo = 'Resposta certa'; }
+          else if (i === escolha) { cls = ' errada'; selo = 'Sua escolha'; }
+          else cls = ' apagada';
+        }
+        html += '<button type="button" class="opcao' + cls + '" data-op="' + i + '" aria-pressed="' + (i === escolha) + '"' + (respondeu ? ' disabled' : '') + '><span class="l">' + 'ABCDEF'[i] + '</span><span class="x">' + esc(o) + '</span><span class="s">' + selo + '</span></button>';
+      });
+      html += '</div><div role="status" aria-live="polite">';
+      if (respondeu) html += '<div class="quiz-retorno ' + (acertou ? 'acertou' : 'errou') + '"><strong>' + (acertou ? 'Isso mesmo!' : 'Quase! Veja a opção marcada como Resposta certa.') + '</strong><p>' + esc(q.explicacao) + '</p><button type="button" class="btn" data-de-novo>Responder de novo</button></div>';
+      html += '</div>';
+      el.innerHTML = html;
+    }
+    desenhar(-1);
+    el.addEventListener('click', function (ev) {
+      var b = ev.target.closest('[data-op]');
+      if (b && !b.disabled) { desenhar(Number(b.getAttribute('data-op'))); var r = el.querySelector('.quiz-retorno .btn'); if (r) r.focus(); return; }
+      if (ev.target.closest('[data-de-novo]')) { desenhar(-1); var p = el.querySelector('.opcao'); if (p) p.focus(); }
+    });
+  });
+
+  /* ---------- Etapa 1 ---------- */
+  var CARS = [
+    { termo: 'Interpretada', frase: 'Escreveu, rodou. O navegador ou o Node.js executa na hora.', codigo: '// no terminal:\nnode app.js' },
+    { termo: 'Tipagem dinâmica', frase: 'A mesma variável pode guardar tipos diferentes.', codigo: 'let x = 5;\nx = "cinco"; // pode!' },
+    { termo: 'Fracamente tipada', frase: 'Converte tipos sozinha em algumas contas. Fique de olho.', codigo: '"5" + 1  // "51"\n"5" - 1  // 4' },
+    { termo: 'Orientada a eventos', frase: 'Reage a ações: clique, tecla, carregamento da página.', codigo: 'botao.addEventListener("click", () => {\n  console.log("clicou!");\n});' },
+    { termo: 'Multiparadigma', frase: 'Aceita estilo estruturado, orientado a objetos e funcional.', codigo: 'const dobro = (n) => n * 2;\ndobro(4); // 8' },
+    { termo: 'Uma tarefa por vez', frase: 'É single-thread, mas sabe esperar sem travar a página.', codigo: 'setTimeout(() => {\n  console.log("1 segundo depois");\n}, 1000);' }
+  ];
+  var carsEl = $('#cars');
+  carsEl.innerHTML = CARS.map(function (k, i) {
+    return '<button type="button" class="car" aria-expanded="false" aria-controls="car-cod-' + i + '"><span class="linha1"><strong>' + esc(k.termo) + '</strong><span class="sinal" aria-hidden="true">+</span></span><span class="frase">' + esc(k.frase) + '</span><code class="cod-bloco" id="car-cod-' + i + '" hidden>' + esc(k.codigo) + '</code></button>';
+  }).join('');
+  carsEl.addEventListener('click', function (ev) {
+    var b = ev.target.closest('.car');
+    if (!b) return;
+    var abrir = b.getAttribute('aria-expanded') !== 'true';
+    b.setAttribute('aria-expanded', String(abrir));
+    b.querySelector('.cod-bloco').hidden = !abrir;
+    b.querySelector('.sinal').textContent = abrir ? '−' : '+';
+  });
+
+  var AMB = {
+    cliente: { titulo: 'No navegador (cliente)', onde: 'Roda no computador ou celular de quem abre a página.', pode: ['Mudar textos, cores e elementos da página', 'Responder a cliques e teclas', 'Validar formulários antes de enviar'], codigo: 'const titulo = document.querySelector("h1");\ntitulo.textContent = "Olá, turma!";' },
+    servidor: { titulo: 'No Node.js (servidor)', onde: 'Roda em um computador remoto, longe da pessoa.', pode: ['Ler e gravar arquivos', 'Conversar com banco de dados', 'Criar APIs e cuidar do login'], codigo: 'const fs = require("fs");\nconst texto = fs.readFileSync("notas.txt", "utf8");' }
+  };
+  function mostrarAmb(qual) {
+    var a = AMB[qual];
+    Array.prototype.forEach.call(document.querySelectorAll('[data-amb]'), function (b) { b.setAttribute('aria-pressed', String(b.getAttribute('data-amb') === qual)); });
+    $('#ambPainel').innerHTML = '<div class="grade-auto" style="grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px"><div style="display:flex;flex-direction:column;gap:8px"><strong style="font-size:19px;font-weight:500">' + esc(a.titulo) + '</strong><span class="discreto">' + esc(a.onde) + '</span>' +
+      a.pode.map(function (p) { return '<span style="display:flex;gap:10px;align-items:baseline"><span aria-hidden="true" style="flex:0 0 8px;height:8px;border-radius:2px;background:var(--ciano)"></span>' + esc(p) + '</span>'; }).join('') +
+      '</div><div style="display:flex;flex-direction:column;gap:8px;min-width:0"><span class="discreto" style="font-size:14px">Exemplo</span><code class="cod-bloco">' + esc(a.codigo) + '</code></div></div>';
+  }
+  document.querySelector('[aria-label="Escolha o ambiente"]').addEventListener('click', function (ev) {
+    var b = ev.target.closest('[data-amb]'); if (b) mostrarAmb(b.getAttribute('data-amb'));
+  });
+  mostrarAmb('cliente');
+
+  var CLASSIF = [
+    { cod: 'document.querySelector("h1")', resp: 'cliente', expl: 'document é a página aberta no navegador.' },
+    { cod: 'fs.readFile("notas.txt")', resp: 'servidor', expl: 'O módulo fs lê arquivos do computador. Ele só existe no Node.js.' },
+    { cod: 'alert("Bem-vindo!")', resp: 'cliente', expl: 'alert abre uma janelinha no navegador.' },
+    { cod: 'process.env.PORT', resp: 'servidor', expl: 'process traz informações da máquina onde o Node.js está rodando.' }
+  ];
+  var respostas = {};
+  var classifEl = $('#classif');
+  classifEl.innerHTML = CLASSIF.map(function (it, i) {
+    return '<div class="item" data-item="' + i + '"><div class="item-linha"><code>' + esc(it.cod) + '</code><div class="botoes" role="group" aria-label="Onde roda ' + esc(it.cod) + '"><button type="button" class="chave" data-resp="cliente" aria-pressed="false">Cliente</button><button type="button" class="chave" data-resp="servidor" aria-pressed="false">Servidor</button></div></div><p class="veredito" role="status" hidden></p></div>';
+  }).join('');
+  classifEl.addEventListener('click', function (ev) {
+    var b = ev.target.closest('[data-resp]'); if (!b) return;
+    var item = b.closest('[data-item]'), i = Number(item.getAttribute('data-item')), v = b.getAttribute('data-resp');
+    respostas[i] = v;
+    Array.prototype.forEach.call(item.querySelectorAll('[data-resp]'), function (x) { x.setAttribute('aria-pressed', String(x === b)); });
+    var certo = v === CLASSIF[i].resp;
+    item.classList.toggle('certo', certo); item.classList.toggle('errado', !certo);
+    var ver = item.querySelector('.veredito'); ver.hidden = false;
+    ver.innerHTML = '<strong>' + (certo ? 'Certo!' : 'Ainda não.') + '</strong> ' + esc(CLASSIF[i].expl);
+    var feitas = Object.keys(respostas), ac = feitas.filter(function (k) { return respostas[k] === CLASSIF[k].resp; }).length;
+    $('#placar').textContent = 'Acertos: ' + ac + ' de ' + CLASSIF.length + '.';
+  });
+
+  /* ---------- Etapa 2 ---------- */
+  var CHECK = [
+    { titulo: 'Instalar o VS Code', detalhe: 'Baixe em code.visualstudio.com e instale com as opções padrão.' },
+    { titulo: 'Instalar o Node.js, versão LTS', detalhe: 'Em nodejs.org, escolha a versão LTS, que é a mais estável.' },
+    { titulo: 'Conferir a instalação', detalhe: 'No VS Code, abra o menu Terminal > Novo Terminal e digite node -v. Apareceu um número de versão? Deu certo.' },
+    { titulo: 'Instalar a extensão Code Runner', detalhe: 'No VS Code, abra Extensões (Ctrl + Shift + X), busque Code Runner e clique em Instalar.' },
+    { titulo: 'Rodar o primeiro arquivo', detalhe: 'Crie ola.js com console.log("Olá!"), salve e aperte Ctrl + Alt + N.' }
+  ];
+  var checkEl = $('#checklist');
+  checkEl.innerHTML = CHECK.map(function (k, i) {
+    return '<label class="check" for="ck' + i + '"><input type="checkbox" id="ck' + i + '" data-ck="' + i + '"' + (estado.checklist[i] ? ' checked' : '') + '><span><span class="t">' + esc(k.titulo) + '</span><span class="d">' + esc(k.detalhe) + '</span></span></label>';
+  }).join('');
+  function renderCheck() {
+    var n = estado.checklist.filter(Boolean).length;
+    $('#checkTexto').textContent = n + ' de ' + CHECK.length + ' feitos.';
+    $('#checkOk').hidden = n !== CHECK.length;
+  }
+  checkEl.addEventListener('change', function (ev) {
+    var i = ev.target.getAttribute('data-ck'); if (i === null) return;
+    estado.checklist[Number(i)] = ev.target.checked; salvar(); renderCheck();
+  });
+  renderCheck();
+
+  /* ---------- Etapa 3 ---------- */
+  function camel(n) {
+    var s = n.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+    var partes = s.split(/[^A-Za-z0-9_$]+/).filter(Boolean);
+    if (!partes.length) return '';
+    s = partes.map(function (p, i) { return i === 0 ? p.charAt(0).toLowerCase() + p.slice(1) : p.charAt(0).toUpperCase() + p.slice(1); }).join('');
+    var m = s.match(/^([0-9]+)(.+)$/);
+    if (m) s = m[2].charAt(0).toLowerCase() + m[2].slice(1) + m[1];
+    if (/^[0-9]+$/.test(s)) s = 'valor' + s;
+    return s;
+  }
+  var RESERVADAS = ['await', 'break', 'case', 'catch', 'class', 'const', 'continue', 'debugger', 'default', 'delete', 'do', 'else', 'enum', 'export', 'extends', 'false', 'finally', 'for', 'function', 'if', 'import', 'in', 'instanceof', 'let', 'new', 'null', 'return', 'static', 'super', 'switch', 'this', 'throw', 'true', 'try', 'typeof', 'var', 'void', 'while', 'with', 'yield'];
+  function validar(bruto) {
+    var n = (bruto || '').trim();
+    function r(nivel, titulo, texto, sug) { return { nivel: nivel, titulo: titulo, texto: texto, sug: sug || '' }; }
+    if (!n) return r('vazio', 'Digite um nome para testar.', 'Exemplo: totalDeAlunos');
+    if (/\s/.test(n)) return r('erro', 'Não pode ter espaço.', 'O JavaScript leria como palavras separadas. Junte as palavras e comece cada nova palavra com maiúscula.', camel(n));
+    if (/^[0-9]/.test(n)) return r('erro', 'Não pode começar com número.', 'Números podem vir depois das letras: nota1 funciona.', camel(n));
+    if (n.indexOf('-') >= 0) return r('erro', 'Não pode ter hífen.', 'O hífen é lido como sinal de menos.', camel(n));
+    if (RESERVADAS.indexOf(n) >= 0) return r('erro', 'Essa é uma palavra reservada.', 'Ela já tem uma função na linguagem, como let, if ou return. Escolha outro nome.');
+    var valido = true;
+    try { valido = /^[\p{L}_$][\p{L}\p{N}_$]*$/u.test(n); } catch (e) { valido = /^[A-Za-z\u00C0-\u024F_$][A-Za-z0-9\u00C0-\u024F_$]*$/.test(n); }
+    if (!valido) return r('erro', 'Tem um caractere que não pode.', 'Use só letras, números, _ e $.', camel(n));
+    if (/[^\x00-\x7F]/.test(n)) return r('aviso', 'Funciona, mas evite acentos e ç.', 'Alguns teclados e ferramentas se atrapalham com eles.', camel(n));
+    if (/[A-Z]/.test(n) && n === n.toUpperCase()) return r('aviso', 'Funciona. Tudo em maiúsculas é o costume para constantes fixas.', 'Exemplos: PI, TAXA_MAXIMA. Para o resto, use camelCase.');
+    if (/^[A-Z]/.test(n)) return r('aviso', 'Funciona, mas comece com letra minúscula.', 'Por convenção, maiúscula no início fica para classes, que você vai ver mais adiante.', n.charAt(0).toLowerCase() + n.slice(1));
+    if (/[a-z0-9]_[a-zA-Z0-9]/.test(n)) return r('aviso', 'Funciona, mas o costume em JavaScript é camelCase.', 'Em vez de separar com _, comece cada nova palavra com maiúscula.', camel(n.replace(/_/g, ' ')));
+    return r('ok', 'Nome válido!', 'O JavaScript aceita e o nome segue as boas práticas.');
+  }
+  var nomeInput = $('#nomeVar'), nomeRes = $('#nomeRes');
+  function renderNome() {
+    var v = validar(nomeInput.value), limpo = nomeInput.value.trim();
+    var selo = { ok: 'Válido', aviso: 'Atenção', erro: 'Inválido', vazio: 'Esperando' }[v.nivel];
+    nomeRes.className = 'resultado ' + v.nivel;
+    var html = '<strong>' + selo + ': ' + esc(v.titulo) + '</strong><span style="font-size:15px;line-height:1.55">' + esc(v.texto) + '</span>';
+    if (v.nivel === 'ok' || v.nivel === 'aviso') html += '<code class="cod-inline">let ' + esc(limpo) + ' = "...";</code>';
+    if (v.sug && v.sug !== limpo) html += '<div class="botoes" style="align-items:center"><span>Sugestão: <code class="cod-inline">' + esc(v.sug) + '</code></span><button type="button" class="btn" data-sug="' + esc(v.sug) + '">Usar sugestão</button></div>';
+    nomeRes.innerHTML = html;
+  }
+  nomeInput.addEventListener('input', renderNome);
+  nomeRes.addEventListener('click', function (ev) {
+    var b = ev.target.closest('[data-sug]'); if (!b) return;
+    nomeInput.value = b.getAttribute('data-sug'); renderNome(); nomeInput.focus();
+  });
+  renderNome();
+
+  /* ---------- Etapa 4 ---------- */
+  var TIPOS = [
+    { rot: '"Ana"', tipo: 'string', expl: 'Texto. Fica sempre entre aspas: simples, duplas ou crases.' },
+    { rot: '19', tipo: 'number', expl: 'Números inteiros e com casas decimais são do mesmo tipo: number.' },
+    { rot: '3.14', tipo: 'number', expl: 'Casas decimais usam ponto, não vírgula. 3,14 não funciona.' },
+    { rot: 'true', tipo: 'boolean', expl: 'Só dois valores possíveis: true (verdadeiro) ou false (falso). Aparece muito em comparações.' },
+    { rot: 'undefined', tipo: 'undefined', expl: 'A variável existe, mas ainda não recebeu valor. Exemplo: let nota; sem nada depois.' },
+    { rot: 'null', tipo: 'object', expl: 'null quer dizer vazio de propósito. O typeof responde "object" por um erro antigo da linguagem, que nunca foi corrigido para não quebrar sites.' },
+    { rot: '10n', tipo: 'bigint', expl: 'Inteiros gigantes, maiores do que o number consegue guardar com precisão.', depois: true },
+    { rot: 'Symbol("id")', tipo: 'symbol', expl: 'Um identificador único. Você vai encontrar mais adiante no curso.', depois: true }
+  ];
+  var tiposEl = $('#tipos');
+  tiposEl.innerHTML = TIPOS.map(function (t, i) { return '<button type="button" class="chave mono" data-tipo="' + i + '" aria-pressed="' + (i === 0) + '">' + esc(t.rot) + '</button>'; }).join('');
+  function mostrarTipo(i) {
+    var t = TIPOS[i];
+    Array.prototype.forEach.call(tiposEl.children, function (b, j) { b.setAttribute('aria-pressed', String(i === j)); });
+    $('#tipoRes').innerHTML = '<div style="display:flex;flex-direction:column;gap:6px"><code style="font-size:18px">typeof ' + esc(t.rot) + '</code><code class="tipo-grande">"' + esc(t.tipo) + '"</code>' + (t.depois ? '<span class="depois">para depois</span>' : '') + '</div><p style="font-size:16px;line-height:1.6">' + esc(t.expl) + '</p>';
+  }
+  tiposEl.addEventListener('click', function (ev) { var b = ev.target.closest('[data-tipo]'); if (b) mostrarTipo(Number(b.getAttribute('data-tipo'))); });
+  mostrarTipo(0);
+
+  /* ---------- Etapa 5 ---------- */
+  var POOL = ['Git', 'React', 'Node', 'SQL', 'Python'];
+  var arr = ['HTML', 'CSS', 'JS'], idxSel = 0, ultimaOp = '';
+  function renderArr() {
+    var cx = $('#caixas');
+    if (!arr.length) cx.innerHTML = '<span class="discreto" style="align-self:center">O array está vazio: []</span>';
+    else cx.innerHTML = arr.map(function (v, i) {
+      return '<button type="button" class="caixa" data-cx="' + i + '" aria-pressed="' + (i === idxSel) + '" aria-label="Índice ' + i + ', valor ' + esc(v) + '"><span class="v">"' + esc(v) + '"</span><span class="i">' + i + '</span></button>';
+    }).join('');
+    var prox = POOL.filter(function (x) { return arr.indexOf(x) < 0; })[0];
+    $('#arrPush').disabled = !prox;
+    $('#arrPop').disabled = !arr.length;
+    var linhas = arr.length ? 'materias[' + idxSel + ']  // "' + arr[idxSel] + '"' : 'materias  // []';
+    $('#arrLeitura').innerHTML = esc(linhas) + '\n<span class="s">' + esc('materias.length  // ' + arr.length) + '</span>' + (ultimaOp ? '\n<span class="s">' + esc(ultimaOp) + '</span>' : '');
+  }
+  $('#caixas').addEventListener('click', function (ev) { var b = ev.target.closest('[data-cx]'); if (b) { idxSel = Number(b.getAttribute('data-cx')); renderArr(); } });
+  $('#arrPush').addEventListener('click', function () {
+    var prox = POOL.filter(function (x) { return arr.indexOf(x) < 0; })[0]; if (!prox) return;
+    arr.push(prox); idxSel = arr.length - 1; ultimaOp = 'materias.push("' + prox + '")  // agora tem ' + arr.length + ' itens'; renderArr();
+  });
+  $('#arrPop').addEventListener('click', function () {
+    if (!arr.length) return;
+    var rem = arr.pop(); idxSel = Math.max(0, Math.min(idxSel, arr.length - 1)); ultimaOp = 'materias.pop()  // removeu "' + rem + '"'; renderArr();
+  });
+  $('#arrReset').addEventListener('click', function () { arr = ['HTML', 'CSS', 'JS']; idxSel = 0; ultimaOp = ''; renderArr(); });
+  renderArr();
+
+  /* ---------- Etapa 6 ---------- */
+  var OPS = [['+', 'soma'], ['-', 'subtração'], ['*', 'multiplicação'], ['/', 'divisão'], ['%', 'resto da divisão'], ['**', 'potência']];
+  function calcular(op, a, b) {
+    switch (op) { case '+': return a + b; case '-': return a - b; case '*': return a * b; case '/': return a / b; case '%': return a % b; default: return Math.pow(a, b); }
+  }
+  function renderCalc() {
+    var ra = $('#calcA').value.trim(), rb = $('#calcB').value.trim();
+    var a = Number(ra.replace(',', '.')), b = Number(rb.replace(',', '.'));
+    var ok = ra !== '' && rb !== '' && !isNaN(a) && !isNaN(b);
+    $('#calc').innerHTML = ok ? OPS.map(function (o) {
+      return '<div><span>' + o[1] + '</span><code>' + a + ' ' + o[0] + ' ' + b + ' <b>→ ' + String(calcular(o[0], a, b)) + '</b></code></div>';
+    }).join('') : '';
+    var nota = 'Dica: no código, decimais usam ponto. Aqui você pode digitar 3,5 ou 3.5.';
+    if (!ok) nota = 'Digite dois números para ver os resultados.';
+    else if (b === 0) nota = 'Dividir por zero em JavaScript não dá erro: o resultado é Infinity. E o resto da divisão por zero é NaN (não é um número).';
+    else if (String(a / b).length > 12) nota = 'Viu muitas casas decimais? O computador guarda decimais de forma aproximada. Isso é normal em quase todas as linguagens.';
+    $('#calcNota').textContent = nota;
+  }
+  $('#calcA').addEventListener('input', renderCalc);
+  $('#calcB').addEventListener('input', renderCalc);
+  renderCalc();
+
+  var PARES = [
+    { rot: '5 e "5"', a: 5, b: '5', ra: '5', rb: '"5"', nota: 'Mesmo valor, tipos diferentes: number e string. O == converte e diz true; o === percebe a diferença.' },
+    { rot: '0 e false', a: 0, b: false, ra: '0', rb: 'false', nota: 'O == converte false em 0 antes de comparar. O === não converte nada.' },
+    { rot: 'null e undefined', a: null, b: undefined, ra: 'null', rb: 'undefined', nota: 'Os dois representam ausência de valor, mas são tipos diferentes.' },
+    { rot: '"abc" e "abc"', a: 'abc', b: 'abc', ra: '"abc"', rb: '"abc"', nota: 'Mesmo valor e mesmo tipo: aqui == e === concordam.' },
+    { rot: '10 e 9', a: 10, b: 9, ra: '10', rb: '9', nota: 'Números diferentes. Aqui > e < fazem mais sentido.' }
+  ];
+  var paresEl = $('#pares');
+  paresEl.innerHTML = PARES.map(function (p, i) { return '<button type="button" class="chave mono" data-par="' + i + '" aria-pressed="' + (i === 0) + '">' + esc(p.rot) + '</button>'; }).join('');
+  function mostrarPar(i) {
+    var P = PARES[i];
+    Array.prototype.forEach.call(paresEl.children, function (b, j) { b.setAttribute('aria-pressed', String(i === j)); });
+    /* comparações frouxas de propósito, para mostrar a diferença */
+    var res = [['==', P.a == P.b], ['===', P.a === P.b], ['!=', P.a != P.b], ['!==', P.a !== P.b], ['>', P.a > P.b], ['<', P.a < P.b]];
+    var discordam = (P.a == P.b) !== (P.a === P.b);
+    $('#comps').innerHTML = res.map(function (r) {
+      var dest = discordam && (r[0] === '==' || r[0] === '===');
+      return '<div class="comp' + (dest ? ' destaque' : '') + '"><span>' + esc(P.ra + ' ' + r[0] + ' ' + P.rb) + '</span><span class="r' + (r[1] ? ' v' : '') + '">' + r[1] + '</span></div>';
+    }).join('');
+    $('#parNota').textContent = P.nota;
+  }
+  paresEl.addEventListener('click', function (ev) { var b = ev.target.closest('[data-par]'); if (b) mostrarPar(Number(b.getAttribute('data-par'))); });
+  mostrarPar(0);
+
+  var A = true, B = false;
+  function renderLogica() {
+    $('#togA').setAttribute('aria-pressed', String(A)); $('#togA').querySelector('code').textContent = String(A);
+    $('#togB').setAttribute('aria-pressed', String(B)); $('#togB').querySelector('code').textContent = String(B);
+    var L = [
+      ['Entra na área VIP? (precisa das duas)', 'temIngresso && naLista', A && B],
+      ['Entra no evento? (basta uma)', 'temIngresso || naLista', A || B],
+      ['Precisa comprar ingresso?', '!temIngresso', !A]
+    ];
+    $('#logicas').innerHTML = L.map(function (l) {
+      return '<div class="logica"><span><span class="p">' + esc(l[0]) + '</span><code>' + esc(l[1]) + '</code></span><span class="r' + (l[2] ? ' v' : '') + '">' + (l[2] ? 'true · sim' : 'false · não') + '</span></div>';
+    }).join('');
+  }
+  $('#togA').addEventListener('click', function () { A = !A; renderLogica(); });
+  $('#togB').addEventListener('click', function () { B = !B; renderLogica(); });
+  renderLogica();
+})();
+</script>
+
+</body></html>
